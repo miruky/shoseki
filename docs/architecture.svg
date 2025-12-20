@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" role="img" aria-label="しょせきのアーキテクチャ図">
+  <title>しょせきのアーキテクチャ</title>
+  <style>
+    .box { fill: none; stroke: #9bb39e; stroke-width: 1.5; }
+    .accent-box { fill: none; stroke: #5b8a6a; stroke-width: 1.5; }
+    .label { font: 600 14px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #6d7a6e; }
+    .small { font: 400 11.5px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #6d7a6e; }
+    .accent-label { font: 700 14px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #3f6b50; }
+    .arrow { stroke: #9bb39e; stroke-width: 1.5; fill: none; marker-end: url(#head); }
+  </style>
+  <defs>
+    <marker id="head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8z" fill="#9bb39e"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="80" width="150" height="72" rx="8" class="box"/>
+  <text x="40" y="108" class="label">posts</text>
+  <text x="40" y="130" class="small">感想データ</text>
+  <text x="40" y="146" class="small">軽量マークダウン本文</text>
+
+  <rect x="240" y="40" width="160" height="64" rx="8" class="accent-box"/>
+  <text x="260" y="66" class="accent-label">router</text>
+  <text x="260" y="88" class="small">ハッシュ → Route</text>
+
+  <rect x="240" y="128" width="160" height="64" rx="8" class="accent-box"/>
+  <text x="260" y="154" class="accent-label">search / format</text>
+  <text x="260" y="176" class="small">検索・整形・読了時間</text>
+
+  <rect x="470" y="84" width="160" height="64" rx="8" class="box"/>
+  <text x="490" y="110" class="label">view</text>
+  <text x="490" y="132" class="small">画面ごとのHTML生成</text>
+
+  <rect x="690" y="84" width="110" height="64" rx="8" class="box"/>
+  <text x="710" y="110" class="label">main</text>
+  <text x="710" y="132" class="small">描画と遷移</text>
+
+  <path class="arrow" d="M170 116 C200 116 210 80 232 74"/>
+  <path class="arrow" d="M170 116 C200 116 210 156 232 160"/>
+  <path class="arrow" d="M400 72 C435 78 440 104 462 110"/>
+  <path class="arrow" d="M400 160 C435 152 440 126 462 120"/>
+  <path class="arrow" d="M630 116 H686"/>
+</svg>
