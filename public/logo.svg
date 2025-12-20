@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="しょせきのロゴ">
+  <title>しょせき</title>
+  <path d="M32 16c-6-4-13-4-19-2v34c6-2 13-2 19 2 6-4 13-4 19-2V14c-6-2-13-2-19 2z" fill="none" stroke="#5b8a6a" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M32 16v34" fill="none" stroke="#5b8a6a" stroke-width="3"/>
+  <path d="M40 9c0 5-3 8-8 9 0-5 3-8 8-9z" fill="#5b8a6a"/>
+</svg>
