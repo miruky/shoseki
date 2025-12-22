@@ -3,14 +3,24 @@
   <style>
     .box { fill: none; stroke: #9bb39e; stroke-width: 1.5; }
     .accent-box { fill: none; stroke: #5b8a6a; stroke-width: 1.5; }
-    .label { font: 600 14px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #6d7a6e; }
+    .label { font: 600 14px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #4a5a4c; }
     .small { font: 400 11.5px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #6d7a6e; }
     .accent-label { font: 700 14px 'Hiragino Sans', 'Noto Sans JP', sans-serif; fill: #3f6b50; }
     .arrow { stroke: #9bb39e; stroke-width: 1.5; fill: none; marker-end: url(#head); }
+    .arrow-head { fill: #9bb39e; }
+    @media (prefers-color-scheme: dark) {
+      .box { stroke: #5f7a63; }
+      .accent-box { stroke: #7fae88; }
+      .label { fill: #cdd6c9; }
+      .small { fill: #97a394; }
+      .accent-label { fill: #a9cfb0; }
+      .arrow { stroke: #5f7a63; }
+      .arrow-head { fill: #5f7a63; }
+    }
   </style>
   <defs>
     <marker id="head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0 0L8 4L0 8z" fill="#9bb39e"/>
+      <path d="M0 0L8 4L0 8z" class="arrow-head"/>
     </marker>
   </defs>
 
