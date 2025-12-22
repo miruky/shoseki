@@ -18,9 +18,11 @@ function tagChips(tags: string[]): string {
     .join('');
 }
 
-function postCard(post: Post): string {
+function postCard(post: Post, index = 0): string {
+  // 一覧で少しずつ立ち上げるためのスタッガ用ディレイ
+  const delay = `style="animation-delay:${Math.min(index, 9) * 55}ms"`;
   return (
-    `<article class="card">` +
+    `<article class="card" ${delay}>` +
     `<a class="card-cover" href="${toHash({ name: 'post', slug: post.slug })}">${coverSvg(post)}</a>` +
     `<div class="card-body">` +
     `<a class="card-title" href="${toHash({ name: 'post', slug: post.slug })}">${esc(post.title)}</a>` +
@@ -60,7 +62,7 @@ export function homeView(): string {
     `<div class="card-meta"><time>${formatDate(featured.date)}</time></div>` +
     `</div></section>` +
     `<div class="home-grid">` +
-    `<div class="post-list">${rest.map(postCard).join('')}</div>` +
+    `<div class="post-list">${rest.map((p, i) => postCard(p, i)).join('')}</div>` +
     `<aside class="sidebar">${tagCloud()}</aside>` +
     `</div></div>`
   );
@@ -80,7 +82,7 @@ export function postView(slug: string): string {
   if (!post) return notFoundView();
   const related = relatedPosts(post);
   const relatedHtml = related.length
-    ? `<section class="related"><h2>関連する感想</h2><div class="post-list">${related.map(postCard).join('')}</div></section>`
+    ? `<section class="related"><h2>関連する感想</h2><div class="post-list">${related.map((p, i) => postCard(p, i)).join('')}</div></section>`
     : '';
   return (
     `<article class="post">` +
@@ -103,7 +105,7 @@ export function postView(slug: string): string {
 export function tagView(tag: string): string {
   const list = postsByTag(POSTS, tag).sort(compareByDateDesc);
   const body = list.length
-    ? `<div class="post-list">${list.map(postCard).join('')}</div>`
+    ? `<div class="post-list">${list.map((p, i) => postCard(p, i)).join('')}</div>`
     : `<p class="empty">「${esc(tag)}」の記事はありません。</p>`;
   return `<div class="listing"><h1 class="page-title">タグ: ${esc(tag)}</h1>${body}</div>`;
 }
@@ -115,7 +117,7 @@ export function searchView(query: string): string {
   }
   const results = searchPosts(POSTS, trimmed);
   const body = results.length
-    ? `<div class="post-list">${results.map(postCard).join('')}</div>`
+    ? `<div class="post-list">${results.map((p, i) => postCard(p, i)).join('')}</div>`
     : `<p class="empty">「${esc(trimmed)}」に一致する感想は見つかりませんでした。</p>`;
   return `<div class="listing"><h1 class="page-title">「${esc(trimmed)}」の検索結果(${results.length}件)</h1>${body}</div>`;
 }
