@@ -127,6 +127,9 @@ a {
   color: var(--ink-soft);
   padding: 4px 2px;
   border-bottom: 2px solid transparent;
+  transition:
+    color 0.16s var(--ease),
+    border-color 0.2s var(--ease);
 }
 
 .nav a:hover {
@@ -535,6 +538,51 @@ a {
 }
 
 /* ---- レスポンシブ ---- */
+
+/* ---- モーション ---- */
+
+@keyframes view-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ルート遷移ごとに本文をやわらかく差し替える */
+.content > * {
+  animation: view-fade 0.34s var(--ease) backwards;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* backwards にして、入場後はホバーの translate と干渉させない */
+.card,
+.featured {
+  animation: rise 0.45s var(--ease) backwards;
+}
+
+.card-cover .cover,
+.featured-cover .cover {
+  transition: transform 0.25s var(--ease);
+}
+
+.card:hover .card-cover .cover,
+.featured-cover:hover .cover {
+  transform: scale(1.03);
+}
 
 @media (max-width: 760px) {
   .nav {
