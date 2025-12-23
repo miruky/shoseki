@@ -1,6 +1,7 @@
 import './style.css';
-import { LEAF_ICON, NAV_SEARCH_ICON } from './icons';
+import { LEAF_ICON, NAV_SEARCH_ICON, THEME_ICONS } from './icons';
 import { parseRoute, toHash, type Route } from './router';
+import { applyTheme, loadTheme, nextTheme, THEME_LABEL, type ThemeMode } from './theme';
 import {
   aboutView,
   archiveView,
@@ -13,7 +14,11 @@ import {
 const app = document.getElementById('app');
 if (!app) throw new Error('#app が見つからない');
 
+let theme: ThemeMode = loadTheme();
+applyTheme(theme);
+
 app.innerHTML = `
+  <div class="reading-progress" hidden><span class="reading-progress-fill"></span></div>
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#/"><span class="brand-mark">${LEAF_ICON}</span><span class="brand-name">しょせき</span></a>
@@ -26,6 +31,7 @@ app.innerHTML = `
         <span class="search-icon">${NAV_SEARCH_ICON}</span>
         <input id="search-input" type="search" placeholder="本や感想を検索" aria-label="検索" />
       </form>
+      <button class="theme-toggle" id="theme-toggle" type="button"></button>
     </div>
   </header>
   <main id="content" class="content"></main>
@@ -37,6 +43,23 @@ app.innerHTML = `
 const content = app.querySelector<HTMLElement>('#content')!;
 const form = app.querySelector<HTMLFormElement>('#search-form')!;
 const searchInput = app.querySelector<HTMLInputElement>('#search-input')!;
+const themeToggle = app.querySelector<HTMLButtonElement>('#theme-toggle')!;
+const progressBar = app.querySelector<HTMLElement>('.reading-progress')!;
+const progressFill = app.querySelector<HTMLElement>('.reading-progress-fill')!;
+
+function updateThemeToggle(): void {
+  themeToggle.innerHTML = THEME_ICONS[theme];
+  const label = `テーマ切替(現在: ${THEME_LABEL[theme]})`;
+  themeToggle.setAttribute('aria-label', label);
+  themeToggle.title = label;
+}
+
+themeToggle.addEventListener('click', () => {
+  theme = nextTheme(theme);
+  applyTheme(theme);
+  updateThemeToggle();
+});
+updateThemeToggle();
 
 form.addEventListener('submit', (ev) => {
   ev.preventDefault();
@@ -67,12 +90,29 @@ function setActiveNav(route: Route): void {
   });
 }
 
+// 記事ページでだけ、読み進めた割合をバーで示す。
+function updateProgress(route: Route): void {
+  if (route.name !== 'post') {
+    progressBar.hidden = true;
+    return;
+  }
+  progressBar.hidden = false;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  progressFill.style.width = `${ratio * 100}%`;
+}
+
+window.addEventListener('scroll', () => updateProgress(parseRoute(location.hash)), {
+  passive: true,
+});
+
 function render(): void {
   const route = parseRoute(location.hash);
   content.innerHTML = viewFor(route);
   setActiveNav(route);
   if (route.name === 'search') searchInput.value = route.query;
   window.scrollTo(0, 0);
+  updateProgress(route);
 }
 
 window.addEventListener('hashchange', render);

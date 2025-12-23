@@ -178,6 +178,51 @@ a {
   outline: none;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--green-deep);
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+
+.theme-toggle:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* 記事を読み進めた割合を上端に示すバー */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.reading-progress[hidden] {
+  display: none;
+}
+
+.reading-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--green);
+  transition: width 0.1s linear;
+}
+
 /* ---- 本体 ---- */
 
 .content {
@@ -470,6 +515,53 @@ a {
   font-size: 19px;
   color: var(--green-deep);
   margin-bottom: 18px;
+}
+
+/* ---- 前後の感想 ---- */
+
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+a.post-nav-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
+}
+
+a.post-nav-slot:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.post-nav-newer {
+  text-align: right;
+}
+
+.post-nav-dir {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--green);
+}
+
+.post-nav-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--green-deep);
+  line-height: 1.5;
 }
 
 .back {

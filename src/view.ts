@@ -1,6 +1,7 @@
 import { compareByDateDesc, formatDate, readingMinutes } from './format';
 import { coverSvg, starRating } from './icons';
 import { renderMarkdown } from './markdown';
+import { adjacentPosts } from './navigation';
 import { POSTS } from './posts';
 import { toHash } from './router';
 import { postsByTag, searchPosts, tagCounts } from './search';
@@ -77,6 +78,22 @@ function relatedPosts(post: Post): Post[] {
     .map((x) => x.p);
 }
 
+function postNav(slug: string): string {
+  const { newer, older } = adjacentPosts(POSTS, slug);
+  const link = (post: Post | null, dir: 'older' | 'newer'): string => {
+    if (!post) return `<span class="post-nav-slot"></span>`;
+    const label = dir === 'newer' ? '新しい感想' : '古い感想';
+    return (
+      `<a class="post-nav-slot post-nav-${dir}" href="${toHash({ name: 'post', slug: post.slug })}">` +
+      `<span class="post-nav-dir">${label}</span>` +
+      `<span class="post-nav-title">${esc(post.title)}</span>` +
+      `</a>`
+    );
+  };
+  if (!newer && !older) return '';
+  return `<nav class="post-nav" aria-label="前後の感想">${link(older, 'older')}${link(newer, 'newer')}</nav>`;
+}
+
 export function postView(slug: string): string {
   const post = POSTS.find((p) => p.slug === slug);
   if (!post) return notFoundView();
@@ -96,6 +113,7 @@ export function postView(slug: string): string {
     `<div class="chips">${tagChips(post.tags)}</div>` +
     `</div></div>` +
     `<div class="post-body">${renderMarkdown(post.body)}</div>` +
+    postNav(slug) +
     relatedHtml +
     `<p class="back"><a href="${toHash({ name: 'home' })}">記事一覧へ戻る</a></p>` +
     `</article>`
