@@ -30,6 +30,6 @@ describe('view のエッジケース', () => {
   });
 
   it('該当のないタグは空状態を示す', () => {
-    expect(tagView('存在しないタグxyz')).toContain('記事はありません');
+    expect(tagView('存在しないタグxyz')).toContain('empty-state');
   });
 });
