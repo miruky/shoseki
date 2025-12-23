@@ -18,7 +18,8 @@ let theme: ThemeMode = loadTheme();
 applyTheme(theme);
 
 app.innerHTML = `
-  <div class="reading-progress" hidden><span class="reading-progress-fill"></span></div>
+  <a class="skip-link" href="#content">本文へスキップ</a>
+  <div class="reading-progress" hidden aria-hidden="true"><span class="reading-progress-fill"></span></div>
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#/"><span class="brand-mark">${LEAF_ICON}</span><span class="brand-name">しょせき</span></a>
@@ -34,7 +35,7 @@ app.innerHTML = `
       <button class="theme-toggle" id="theme-toggle" type="button"></button>
     </div>
   </header>
-  <main id="content" class="content"></main>
+  <main id="content" class="content" tabindex="-1"></main>
   <footer class="site-footer">
     <p>しょせき ・ 読んだ本の感想を書き留める場所</p>
   </footer>
@@ -60,6 +61,13 @@ themeToggle.addEventListener('click', () => {
   updateThemeToggle();
 });
 updateThemeToggle();
+
+// ハッシュルーターと衝突しないよう、スキップは遷移せずに本文へフォーカスする。
+const skipLink = app.querySelector<HTMLAnchorElement>('.skip-link')!;
+skipLink.addEventListener('click', (ev) => {
+  ev.preventDefault();
+  content.focus();
+});
 
 form.addEventListener('submit', (ev) => {
   ev.preventDefault();

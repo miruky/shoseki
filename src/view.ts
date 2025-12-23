@@ -24,9 +24,9 @@ function postCard(post: Post, index = 0): string {
   const delay = `style="animation-delay:${Math.min(index, 9) * 55}ms"`;
   return (
     `<article class="card" ${delay}>` +
-    `<a class="card-cover" href="${toHash({ name: 'post', slug: post.slug })}">${coverSvg(post)}</a>` +
+    `<a class="card-cover" href="${toHash({ name: 'post', slug: post.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(post)}</a>` +
     `<div class="card-body">` +
-    `<a class="card-title" href="${toHash({ name: 'post', slug: post.slug })}">${esc(post.title)}</a>` +
+    `<h3 class="card-title"><a href="${toHash({ name: 'post', slug: post.slug })}">${esc(post.title)}</a></h3>` +
     `<p class="card-book">${esc(post.book.title)} ・ ${esc(post.book.author)}</p>` +
     `<div class="card-rating">${starRating(post.rating)}</div>` +
     `<p class="card-excerpt">${esc(post.excerpt)}</p>` +
@@ -52,11 +52,12 @@ export function homeView(): string {
   if (!featured) return `<p class="empty">まだ記事がありません。</p>`;
   return (
     `<div class="home">` +
-    `<section class="featured">` +
-    `<a class="featured-cover" href="${toHash({ name: 'post', slug: featured.slug })}">${coverSvg(featured)}</a>` +
+    `<h1 class="sr-only">感想の一覧</h1>` +
+    `<section class="featured" aria-labelledby="featured-title">` +
+    `<a class="featured-cover" href="${toHash({ name: 'post', slug: featured.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(featured)}</a>` +
     `<div class="featured-body">` +
     `<p class="kicker">最新の感想</p>` +
-    `<a class="featured-title" href="${toHash({ name: 'post', slug: featured.slug })}">${esc(featured.title)}</a>` +
+    `<h2 class="featured-title" id="featured-title"><a href="${toHash({ name: 'post', slug: featured.slug })}">${esc(featured.title)}</a></h2>` +
     `<p class="featured-book">${esc(featured.book.title)} ・ ${esc(featured.book.author)}</p>` +
     `<div>${starRating(featured.rating)}</div>` +
     `<p class="featured-excerpt">${esc(featured.excerpt)}</p>` +
