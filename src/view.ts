@@ -1,5 +1,5 @@
 import { compareByDateDesc, formatDate, readingMinutes } from './format';
-import { coverSvg, starRating } from './icons';
+import { coverSvg, EMPTY_ICON, starRating } from './icons';
 import { renderMarkdown } from './markdown';
 import { adjacentPosts } from './navigation';
 import { POSTS } from './posts';
@@ -9,6 +9,17 @@ import type { Post } from './types';
 
 function esc(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// 検索ヒットなし・空のタグ・未検出ページで共通して使う空状態。
+function emptyBlock(message: string, extra = ''): string {
+  return (
+    `<div class="empty-state">` +
+    `<span class="empty-state-art" aria-hidden="true">${EMPTY_ICON}</span>` +
+    `<p class="empty-state-text">${message}</p>` +
+    extra +
+    `</div>`
+  );
 }
 
 const sorted = (): Post[] => [...POSTS].sort(compareByDateDesc);
@@ -49,7 +60,7 @@ function tagCloud(): string {
 export function homeView(): string {
   const all = sorted();
   const [featured, ...rest] = all;
-  if (!featured) return `<p class="empty">まだ記事がありません。</p>`;
+  if (!featured) return emptyBlock('まだ感想がありません。');
   return (
     `<div class="home">` +
     `<h1 class="sr-only">感想の一覧</h1>` +
@@ -125,19 +136,19 @@ export function tagView(tag: string): string {
   const list = postsByTag(POSTS, tag).sort(compareByDateDesc);
   const body = list.length
     ? `<div class="post-list">${list.map((p, i) => postCard(p, i)).join('')}</div>`
-    : `<p class="empty">「${esc(tag)}」の記事はありません。</p>`;
+    : emptyBlock(`「${esc(tag)}」の感想はまだありません。`);
   return `<div class="listing"><h1 class="page-title">タグ: ${esc(tag)}</h1>${body}</div>`;
 }
 
 export function searchView(query: string): string {
   const trimmed = query.trim();
   if (!trimmed) {
-    return `<div class="listing"><h1 class="page-title">検索</h1><p class="empty">上の検索欄に語を入れてください。</p></div>`;
+    return `<div class="listing"><h1 class="page-title">検索</h1>${emptyBlock('上の検索欄に、本の名前や感想の言葉を入れてください。')}</div>`;
   }
   const results = searchPosts(POSTS, trimmed);
   const body = results.length
     ? `<div class="post-list">${results.map((p, i) => postCard(p, i)).join('')}</div>`
-    : `<p class="empty">「${esc(trimmed)}」に一致する感想は見つかりませんでした。</p>`;
+    : emptyBlock(`「${esc(trimmed)}」に一致する感想は見つかりませんでした。`);
   return `<div class="listing"><h1 class="page-title">「${esc(trimmed)}」の検索結果(${results.length}件)</h1>${body}</div>`;
 }
 
@@ -175,6 +186,10 @@ export function aboutView(): string {
 export function notFoundView(): string {
   return (
     `<div class="listing"><h1 class="page-title">ページが見つかりません</h1>` +
-    `<p class="empty"><a href="${toHash({ name: 'home' })}">記事一覧へ戻る</a></p></div>`
+    emptyBlock(
+      'お探しのページは見つかりませんでした。',
+      `<p class="back"><a href="${toHash({ name: 'home' })}">記事一覧へ戻る</a></p>`,
+    ) +
+    `</div>`
   );
 }

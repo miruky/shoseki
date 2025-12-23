@@ -48,6 +48,10 @@ export const NAV_SEARCH_ICON =
 export const LEAF_ICON =
   '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20C6 20 4 15 4 11 4 6 8 4 13 4c4 0 7 0 7 0s0 9-5 13c-2 1.6-4 1.4-4 1.4"/><path d="M11 20c0-5 2-9 6-12"/></svg>';
 
+// 空状態に添える、開いた本のアイコン。
+export const EMPTY_ICON =
+  '<svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 13c-3-2-7-3-11-3-2 0-4 .2-5.5.6v26c1.5-.4 3.5-.6 5.5-.6 4 0 8 1 11 3"/><path d="M24 13c3-2 7-3 11-3 2 0 4 .2 5.5.6v26c-1.5-.4-3.5-.6-5.5-.6-4 0-8 1-11 3"/><path d="M24 13v26"/></svg>';
+
 // テーマ切替ボタンのアイコン(自動・ライト・ダーク)。currentColorで描く。
 export const THEME_ICONS: Record<'auto' | 'light' | 'dark', string> = {
   auto: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/></svg>',

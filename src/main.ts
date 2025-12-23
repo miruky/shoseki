@@ -69,6 +69,18 @@ skipLink.addEventListener('click', (ev) => {
   content.focus();
 });
 
+// 「/」で検索へ、検索中の Esc で抜ける。
+window.addEventListener('keydown', (ev) => {
+  const target = ev.target as HTMLElement;
+  const typing = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+  if (ev.key === '/' && !typing) {
+    ev.preventDefault();
+    searchInput.focus();
+  } else if (ev.key === 'Escape' && target === searchInput) {
+    searchInput.blur();
+  }
+});
+
 form.addEventListener('submit', (ev) => {
   ev.preventDefault();
   const query = searchInput.value.trim();
