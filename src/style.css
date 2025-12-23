@@ -79,6 +79,42 @@ a {
   border-radius: 3px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 50;
+  padding: 9px 15px;
+  font-size: 13px;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--green-deep);
+  border: 1px solid var(--green);
+  box-shadow: var(--shadow);
+  transform: translateY(-180%);
+  transition: transform 0.18s var(--ease);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.content:focus {
+  outline: none;
+}
+
 /* ---- ヘッダー ---- */
 
 .site-header {
@@ -300,15 +336,18 @@ a {
 }
 
 .featured-title {
-  display: block;
   font-family: var(--serif);
   font-size: 24px;
-  color: var(--green-deep);
-  margin-bottom: 8px;
+  font-weight: 600;
+  margin: 0 0 8px;
   line-height: 1.5;
 }
 
-.featured-title:hover {
+.featured-title a {
+  color: var(--green-deep);
+}
+
+.featured-title a:hover {
   color: var(--green);
 }
 
@@ -363,11 +402,16 @@ a {
 .card-title {
   font-family: var(--serif);
   font-size: 18px;
-  color: var(--green-deep);
+  font-weight: 600;
   line-height: 1.5;
+  margin: 0;
 }
 
-.card-title:hover {
+.card-title a {
+  color: var(--green-deep);
+}
+
+.card-title a:hover {
   color: var(--green);
 }
 
@@ -677,13 +721,34 @@ a.post-nav-slot:hover {
 }
 
 @media (max-width: 760px) {
+  .header-inner {
+    flex-wrap: wrap;
+    gap: 12px 14px;
+  }
+  .theme-toggle {
+    order: 1;
+    margin-left: auto;
+  }
+  .search {
+    order: 2;
+    width: 100%;
+    margin-left: 0;
+  }
+  .search input {
+    flex: 1;
+    width: auto;
+  }
   .nav {
-    display: none;
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+    gap: 24px;
+    padding-top: 2px;
   }
   .featured,
   .home-grid,
-  .post-head,
-  .card {
+  .post-head {
     grid-template-columns: 1fr;
   }
   .featured-cover,
@@ -692,6 +757,12 @@ a.post-nav-slot:hover {
   }
   .search input {
     width: 110px;
+  }
+  .post-nav {
+    grid-template-columns: 1fr;
+  }
+  .post-nav-newer {
+    text-align: left;
   }
 }
 
