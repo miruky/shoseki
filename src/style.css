@@ -282,11 +282,37 @@ a {
   font-weight: 600;
 }
 
-.empty {
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 52px 20px;
   color: var(--ink-soft);
 }
 
-.empty a {
+.empty-state-art {
+  color: var(--green);
+  opacity: 0.75;
+}
+
+.empty-state-art svg {
+  width: 54px;
+  height: 54px;
+}
+
+.empty-state-text {
+  font-size: 15px;
+  max-width: 28rem;
+  line-height: 1.8;
+}
+
+.empty-state .back {
+  margin-top: 0;
+}
+
+.empty-state .back a {
   color: var(--green-deep);
   text-decoration: underline;
 }
