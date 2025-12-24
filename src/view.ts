@@ -1,5 +1,5 @@
 import { compareByDateDesc, formatDate, readingMinutes } from './format';
-import { coverSvg, EMPTY_ICON, starRating } from './icons';
+import { coverSvg, EMPTY_ICON, LINK_ICON, starRating } from './icons';
 import { renderMarkdown } from './markdown';
 import { adjacentPosts } from './navigation';
 import { POSTS } from './posts';
@@ -168,6 +168,7 @@ export function postView(slug: string): string {
     `<div class="post-rating">${starRating(post.rating)}</div>` +
     `<div class="card-meta"><time>${formatDate(post.date)}</time><span>${readingMinutes(post.body)}分で読めます</span></div>` +
     `<div class="chips">${tagChips(post.tags)}</div>` +
+    `<button class="post-share" type="button" data-share>${LINK_ICON}<span class="post-share-label">リンクをコピー</span></button>` +
     `</div></div>` +
     `<div class="post-body">${renderMarkdown(post.body)}</div>` +
     postNav(slug) +
