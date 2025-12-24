@@ -1,5 +1,6 @@
 import './style.css';
 import { LEAF_ICON, NAV_SEARCH_ICON, THEME_ICONS } from './icons';
+import { pageMeta } from './meta';
 import { parseRoute, toHash, type Route } from './router';
 import { applyTheme, loadTheme, nextTheme, THEME_LABEL, type ThemeMode } from './theme';
 import { initMotion, revealRoute } from './motion';
@@ -111,6 +112,44 @@ function setActiveNav(route: Route): void {
   });
 }
 
+// ルートごとに <title> と説明文を差し替え、共有・ブックマークで内容が伝わるようにする。
+function setMetaTag(attr: 'name' | 'property', key: string, value: string): void {
+  let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute('content', value);
+}
+
+function applyMeta(route: Route): void {
+  const meta = pageMeta(route);
+  document.title = meta.title;
+  setMetaTag('name', 'description', meta.description);
+  setMetaTag('property', 'og:title', meta.title);
+  setMetaTag('property', 'og:description', meta.description);
+}
+
+// 記事の「リンクをコピー」。クリップボードが使えなければ選択して伝える。
+content.addEventListener('click', (ev) => {
+  const btn = (ev.target as HTMLElement).closest<HTMLButtonElement>('[data-share]');
+  if (!btn) return;
+  const label = btn.querySelector('.post-share-label');
+  const done = (text: string): void => {
+    if (label) label.textContent = text;
+    btn.classList.add('copied');
+    window.setTimeout(() => {
+      if (label) label.textContent = 'リンクをコピー';
+      btn.classList.remove('copied');
+    }, 1800);
+  };
+  navigator.clipboard?.writeText(location.href).then(
+    () => done('コピーしました'),
+    () => done('コピーできませんでした'),
+  );
+});
+
 // 記事ページでだけ、読み進めた割合をバーで示す。
 function updateProgress(route: Route): void {
   if (route.name !== 'post') {
@@ -131,6 +170,7 @@ function render(): void {
   const route = parseRoute(location.hash);
   content.innerHTML = viewFor(route);
   setActiveNav(route);
+  applyMeta(route);
   if (route.name === 'search') searchInput.value = route.query;
   revealRoute(content);
   updateProgress(route);
