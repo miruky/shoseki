@@ -42,6 +42,21 @@ function heroHome(): string {
   );
 }
 
+// 書籍カバーが横に流れる帯(マーキー)。装飾なので aria-hidden。
+// 同じ並びを2つ繋げ、-50%平行移動でシームレスにループさせる。
+function coverMarquee(): string {
+  const posts = sorted();
+  if (posts.length === 0) return '';
+  const base = Array.from({ length: 4 }, () => posts).flat();
+  const half = base
+    .map(
+      (p) =>
+        `<a class="marquee-item" href="${toHash({ name: 'post', slug: p.slug })}" tabindex="-1">${coverSvg(p)}</a>`,
+    )
+    .join('');
+  return `<div class="marquee" aria-hidden="true"><div class="marquee-track">${half}${half}</div></div>`;
+}
+
 function postHero(slug: string): string {
   const seed = encodeURIComponent(slug);
   return (
@@ -92,6 +107,7 @@ export function homeView(): string {
   return (
     `<div class="home">` +
     heroHome() +
+    coverMarquee() +
     `<section class="featured" data-reveal aria-labelledby="featured-title">` +
     `<a class="featured-cover" href="${toHash({ name: 'post', slug: featured.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(featured)}</a>` +
     `<div class="featured-body">` +
