@@ -24,6 +24,34 @@ function emptyBlock(message: string, extra = ''): string {
 
 const sorted = (): Post[] => [...POSTS].sort(compareByDateDesc);
 
+// フリー写真(Lorem Picsum)をグレースケールで敷き、緑のティントを重ねて
+// どんな写真でも基調になじむヒーローにする。視差はmotion層が付ける。
+function heroHome(): string {
+  return (
+    `<section class="hero" data-parallax-scope>` +
+    `<div class="hero-media">` +
+    `<img class="hero-img" data-parallax="0.16" src="https://picsum.photos/seed/shoseki-shelf/1600/1000?grayscale" alt="" loading="lazy" width="1600" height="1000" />` +
+    `<span class="hero-tint" aria-hidden="true"></span>` +
+    `</div>` +
+    `<div class="hero-inner">` +
+    `<p class="kicker">読書の記録</p>` +
+    `<h1 class="hero-title">しょせき</h1>` +
+    `<p class="hero-lede">読んだ本の感想を、静かに書き留めておく場所。読了直後の熱と、再読でほどけていく心境を、その都度の言葉で。</p>` +
+    `</div>` +
+    `</section>`
+  );
+}
+
+function postHero(slug: string): string {
+  const seed = encodeURIComponent(slug);
+  return (
+    `<div class="post-hero" data-parallax-scope>` +
+    `<img class="post-hero-img" data-parallax="0.14" src="https://picsum.photos/seed/${seed}/1600/760?grayscale" alt="" loading="lazy" width="1600" height="760" />` +
+    `<span class="hero-tint" aria-hidden="true"></span>` +
+    `</div>`
+  );
+}
+
 function tagChips(tags: string[]): string {
   return tags
     .map((t) => `<a class="chip" href="${toHash({ name: 'tag', tag: t })}">${esc(t)}</a>`)
@@ -34,7 +62,7 @@ function postCard(post: Post, index = 0): string {
   // 一覧で少しずつ立ち上げるためのスタッガ用ディレイ
   const delay = `style="animation-delay:${Math.min(index, 9) * 55}ms"`;
   return (
-    `<article class="card" ${delay}>` +
+    `<article class="card" data-reveal ${delay}>` +
     `<a class="card-cover" href="${toHash({ name: 'post', slug: post.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(post)}</a>` +
     `<div class="card-body">` +
     `<h3 class="card-title"><a href="${toHash({ name: 'post', slug: post.slug })}">${esc(post.title)}</a></h3>` +
@@ -63,8 +91,8 @@ export function homeView(): string {
   if (!featured) return emptyBlock('まだ感想がありません。');
   return (
     `<div class="home">` +
-    `<h1 class="sr-only">感想の一覧</h1>` +
-    `<section class="featured" aria-labelledby="featured-title">` +
+    heroHome() +
+    `<section class="featured" data-reveal aria-labelledby="featured-title">` +
     `<a class="featured-cover" href="${toHash({ name: 'post', slug: featured.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(featured)}</a>` +
     `<div class="featured-body">` +
     `<p class="kicker">最新の感想</p>` +
@@ -115,7 +143,8 @@ export function postView(slug: string): string {
     : '';
   return (
     `<article class="post">` +
-    `<div class="post-head">` +
+    postHero(post.slug) +
+    `<div class="post-head" data-reveal>` +
     `<div class="post-cover">${coverSvg(post)}</div>` +
     `<div class="post-head-body">` +
     `<p class="kicker">${esc(post.book.title)} ・ ${esc(post.book.author)}</p>` +

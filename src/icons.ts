@@ -22,14 +22,26 @@ export function starRating(rating: number): string {
 }
 
 // 本文や画像を持たないので、基調色と書名から表紙を手続きで描く。
+// 陰影のグラデーション・背の溝・明朝体のイニシャルで、平板な四角に見えないようにする。
 export function coverSvg(post: Post): string {
   const initial = post.book.title.slice(0, 1);
+  // 1ページに複数の表紙が並ぶため、グラデーションidを書名から一意にする
+  let h = 0;
+  for (let i = 0; i < post.slug.length; i += 1) h = (h * 31 + post.slug.charCodeAt(i)) >>> 0;
+  const gid = `cov${h.toString(36)}`;
   return (
-    `<svg class="cover" viewBox="0 0 120 160" role="img" aria-label="${escapeAttr(post.book.title)}の表紙">` +
-    `<rect x="0" y="0" width="120" height="160" rx="6" fill="${post.cover}"/>` +
-    `<rect x="10" y="10" width="100" height="140" rx="3" fill="none" stroke="rgba(255,255,255,0.4)"/>` +
-    `<line x1="14" y1="10" x2="14" y2="150" stroke="rgba(0,0,0,0.18)" stroke-width="3"/>` +
-    `<text x="64" y="92" text-anchor="middle" font-size="46" fill="rgba(255,255,255,0.92)" font-family="serif">${escapeText(initial)}</text>` +
+    `<svg class="cover" viewBox="0 0 120 168" role="img" aria-label="${escapeAttr(post.book.title)}の表紙">` +
+    `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>` +
+    `<stop offset="0.45" stop-color="#ffffff" stop-opacity="0"/>` +
+    `<stop offset="1" stop-color="#000000" stop-opacity="0.24"/>` +
+    `</linearGradient></defs>` +
+    `<rect x="0" y="0" width="120" height="168" rx="4" fill="${post.cover}"/>` +
+    `<rect x="0" y="0" width="120" height="168" rx="4" fill="url(#${gid})"/>` +
+    `<rect x="8.5" y="8.5" width="103" height="151" rx="2" fill="none" stroke="rgba(255,255,255,0.34)"/>` +
+    `<line x1="13" y1="9" x2="13" y2="159" stroke="rgba(0,0,0,0.16)" stroke-width="2"/>` +
+    `<text x="65" y="88" text-anchor="middle" font-size="42" fill="rgba(255,255,255,0.94)" font-family="'Hiragino Mincho ProN', 'Noto Serif JP', serif">${escapeText(initial)}</text>` +
+    `<line x1="46" y1="106" x2="84" y2="106" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>` +
     `</svg>`
   );
 }
