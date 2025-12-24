@@ -4,6 +4,7 @@ export type Route =
   | { name: 'tag'; tag: string }
   | { name: 'archive' }
   | { name: 'about' }
+  | { name: 'favorites' }
   | { name: 'search'; query: string };
 
 // 場所のハッシュ(#/post/foo など)をRouteに変換する。
@@ -19,6 +20,7 @@ export function parseRoute(hash: string): Route {
   if (head === 'tag' && second) return { name: 'tag', tag: decodeURIComponent(second) };
   if (head === 'archive') return { name: 'archive' };
   if (head === 'about') return { name: 'about' };
+  if (head === 'favorites') return { name: 'favorites' };
   if (head === 'search') {
     const params = new URLSearchParams(queryString ?? '');
     return { name: 'search', query: params.get('q') ?? '' };
@@ -38,6 +40,8 @@ export function toHash(route: Route): string {
       return '#/archive';
     case 'about':
       return '#/about';
+    case 'favorites':
+      return '#/favorites';
     case 'search':
       return `#/search?q=${encodeURIComponent(route.query)}`;
   }
