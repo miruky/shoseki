@@ -2,6 +2,7 @@ import './style.css';
 import { LEAF_ICON, NAV_SEARCH_ICON, THEME_ICONS } from './icons';
 import { parseRoute, toHash, type Route } from './router';
 import { applyTheme, loadTheme, nextTheme, THEME_LABEL, type ThemeMode } from './theme';
+import { initMotion, revealRoute } from './motion';
 import {
   aboutView,
   archiveView,
@@ -131,9 +132,10 @@ function render(): void {
   content.innerHTML = viewFor(route);
   setActiveNav(route);
   if (route.name === 'search') searchInput.value = route.query;
-  window.scrollTo(0, 0);
+  revealRoute(content);
   updateProgress(route);
 }
 
 window.addEventListener('hashchange', render);
+initMotion();
 render();
