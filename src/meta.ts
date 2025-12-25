@@ -27,6 +27,8 @@ export function pageMeta(route: Route): PageMeta {
       return { title: `アーカイブ | ${SITE}`, description: 'これまでの感想を年ごとにたどります。' };
     case 'about':
       return { title: `このブログについて | ${SITE}`, description: SITE_DESC };
+    case 'favorites':
+      return { title: `お気に入り | ${SITE}`, description: '印をつけて読み返したい感想の一覧。' };
     case 'search': {
       const q = route.query.trim();
       return q
