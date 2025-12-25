@@ -18,9 +18,10 @@ describe('parseRoute', () => {
     });
   });
 
-  it('アーカイブとについて', () => {
+  it('アーカイブ・について・お気に入り', () => {
     expect(parseRoute('#/archive')).toEqual({ name: 'archive' });
     expect(parseRoute('#/about')).toEqual({ name: 'about' });
+    expect(parseRoute('#/favorites')).toEqual({ name: 'favorites' });
   });
 
   it('検索クエリ', () => {
@@ -43,6 +44,7 @@ describe('toHash と parseRoute は往復する', () => {
       { name: 'tag', tag: '海外文学' } as const,
       { name: 'archive' } as const,
       { name: 'about' } as const,
+      { name: 'favorites' } as const,
       { name: 'search', query: 'カフカ 変身' } as const,
     ];
     for (const route of routes) {
