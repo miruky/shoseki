@@ -57,6 +57,10 @@ function escapeText(s: string): string {
 export const NAV_SEARCH_ICON =
   '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>';
 
+// お気に入りトグルのハート。未登録は線画、登録済みは .active で塗る(CSS側)。
+export const HEART_ICON =
+  '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3 4.2 12.6a4.6 4.6 0 0 1 0-6.5 4.4 4.4 0 0 1 6.3 0l1.5 1.5 1.5-1.5a4.4 4.4 0 0 1 6.3 0 4.6 4.6 0 0 1 0 6.5z"/></svg>';
+
 // 記事の共有(リンクをコピー)ボタンに添える鎖のアイコン。
 export const LINK_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14a4 4 0 0 0 6 .5l2.5-2.5a4 4 0 0 0-5.7-5.7L10.4 7.7"/><path d="M15 10a4 4 0 0 0-6-.5L6.5 12a4 4 0 0 0 5.7 5.7l1.4-1.4"/></svg>';
