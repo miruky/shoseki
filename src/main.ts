@@ -1,5 +1,6 @@
 import './style.css';
 import { LEAF_ICON, NAV_SEARCH_ICON, THEME_ICONS } from './icons';
+import { favoriteCount, toggleFavorite } from './favorites';
 import { pageMeta } from './meta';
 import { parseRoute, toHash, type Route } from './router';
 import { applyTheme, loadTheme, nextTheme, THEME_LABEL, type ThemeMode } from './theme';
@@ -7,6 +8,7 @@ import { initMotion, revealRoute } from './motion';
 import {
   aboutView,
   archiveView,
+  favoritesView,
   homeView,
   postView,
   searchView,
@@ -28,6 +30,7 @@ app.innerHTML = `
       <nav class="nav">
         <a data-nav="home" href="#/">ホーム</a>
         <a data-nav="archive" href="#/archive">アーカイブ</a>
+        <a data-nav="favorites" href="#/favorites">お気に入り<span class="nav-fav-count" hidden></span></a>
         <a data-nav="about" href="#/about">について</a>
       </nav>
       <form class="search" id="search-form" role="search">
@@ -101,9 +104,19 @@ function viewFor(route: Route): string {
       return archiveView();
     case 'about':
       return aboutView();
+    case 'favorites':
+      return favoritesView();
     case 'search':
       return searchView(route.query);
   }
+}
+
+const favCountEl = app.querySelector<HTMLElement>('.nav-fav-count')!;
+
+function updateFavCount(): void {
+  const n = favoriteCount();
+  favCountEl.textContent = String(n);
+  favCountEl.hidden = n === 0;
 }
 
 function setActiveNav(route: Route): void {
@@ -150,6 +163,25 @@ content.addEventListener('click', (ev) => {
   );
 });
 
+// お気に入りのトグル。ボタンの見た目とナビのバッジを更新し、
+// お気に入り一覧を見ている最中は外した項目が消えるよう描き直す。
+content.addEventListener('click', (ev) => {
+  const btn = (ev.target as HTMLElement).closest<HTMLButtonElement>('[data-fav]');
+  if (!btn) return;
+  ev.preventDefault();
+  const slug = btn.dataset.slug ?? '';
+  const active = toggleFavorite(slug);
+  btn.classList.toggle('active', active);
+  btn.setAttribute('aria-pressed', String(active));
+  const label = active ? 'お気に入りから外す' : 'お気に入りに追加';
+  btn.setAttribute('aria-label', label);
+  btn.title = label;
+  const text = btn.querySelector('.fav-label');
+  if (text) text.textContent = active ? 'お気に入り済み' : 'お気に入り';
+  updateFavCount();
+  if (parseRoute(location.hash).name === 'favorites') render();
+});
+
 // 記事ページでだけ、読み進めた割合をバーで示す。
 function updateProgress(route: Route): void {
   if (route.name !== 'post') {
@@ -171,6 +203,7 @@ function render(): void {
   content.innerHTML = viewFor(route);
   setActiveNav(route);
   applyMeta(route);
+  updateFavCount();
   if (route.name === 'search') searchInput.value = route.query;
   revealRoute(content);
   updateProgress(route);
