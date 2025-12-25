@@ -1,5 +1,6 @@
 import { compareByDateDesc, formatDate, readingMinutes } from './format';
-import { coverSvg, EMPTY_ICON, LINK_ICON, starRating } from './icons';
+import { isFavorite, loadFavorites } from './favorites';
+import { coverSvg, EMPTY_ICON, HEART_ICON, LINK_ICON, starRating } from './icons';
 import { renderMarkdown } from './markdown';
 import { adjacentPosts } from './navigation';
 import { POSTS } from './posts';
@@ -67,6 +68,21 @@ function postHero(slug: string): string {
   );
 }
 
+// お気に入りトグル。一覧では小さなハート、記事では文言つきのボタンにする。
+function favButton(slug: string, variant: 'card' | 'post'): string {
+  const active = isFavorite(slug);
+  const label = active ? 'お気に入りから外す' : 'お気に入りに追加';
+  const text =
+    variant === 'post'
+      ? `<span class="fav-label">${active ? 'お気に入り済み' : 'お気に入り'}</span>`
+      : '';
+  return (
+    `<button class="fav fav-${variant}${active ? ' active' : ''}" type="button" ` +
+    `data-fav data-slug="${esc(slug)}" aria-pressed="${active}" aria-label="${label}" title="${label}">` +
+    `${HEART_ICON}${text}</button>`
+  );
+}
+
 function tagChips(tags: string[]): string {
   return tags
     .map((t) => `<a class="chip" href="${toHash({ name: 'tag', tag: t })}">${esc(t)}</a>`)
@@ -78,6 +94,7 @@ function postCard(post: Post, index = 0): string {
   const delay = `style="animation-delay:${Math.min(index, 9) * 55}ms"`;
   return (
     `<article class="card" data-reveal ${delay}>` +
+    favButton(post.slug, 'card') +
     `<a class="card-cover" href="${toHash({ name: 'post', slug: post.slug })}" tabindex="-1" aria-hidden="true">${coverSvg(post)}</a>` +
     `<div class="card-body">` +
     `<h3 class="card-title"><a href="${toHash({ name: 'post', slug: post.slug })}">${esc(post.title)}</a></h3>` +
@@ -168,7 +185,10 @@ export function postView(slug: string): string {
     `<div class="post-rating">${starRating(post.rating)}</div>` +
     `<div class="card-meta"><time>${formatDate(post.date)}</time><span>${readingMinutes(post.body)}分で読めます</span></div>` +
     `<div class="chips">${tagChips(post.tags)}</div>` +
+    `<div class="post-actions">` +
+    favButton(post.slug, 'post') +
     `<button class="post-share" type="button" data-share>${LINK_ICON}<span class="post-share-label">リンクをコピー</span></button>` +
+    `</div>` +
     `</div></div>` +
     `<div class="post-body">${renderMarkdown(post.body)}</div>` +
     postNav(slug) +
@@ -216,6 +236,18 @@ export function archiveView(): string {
     })
     .join('');
   return `<div class="listing"><h1 class="page-title">アーカイブ</h1>${sections}</div>`;
+}
+
+export function favoritesView(): string {
+  const favs = loadFavorites();
+  const list = sorted().filter((p) => favs.has(p.slug));
+  const body = list.length
+    ? `<div class="post-list">${list.map((p, i) => postCard(p, i)).join('')}</div>`
+    : emptyBlock(
+        'まだお気に入りはありません。記事ページの「お気に入り」で、読み返したい感想に印をつけられます。',
+        `<p class="back"><a href="${toHash({ name: 'home' })}">記事一覧へ戻る</a></p>`,
+      );
+  return `<div class="listing"><h1 class="page-title">お気に入り</h1>${body}</div>`;
 }
 
 export function aboutView(): string {
